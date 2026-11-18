@@ -2,6 +2,9 @@
 const configuredBase = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? '/api';
 const BASE = configuredBase.trim().replace(/\\+$/, '').replace(/\/+$/, '') || '/api';
 let authTokenGetter: (() => Promise<string | null>) | null = null;
+let adminToken: string | null = null;
+export function setAdminToken(token: string | null) { adminToken = token; }
+export function adminHeaders(): Record<string, string> { return adminToken ? { Authorization: `Bearer ${adminToken}` } : {}; }
 
 export function setAuthTokenGetter(getter: (() => Promise<string | null>) | null): void {
   authTokenGetter = getter;
@@ -20,7 +23,7 @@ export class ApiError extends Error {
 export async function api<T>(path: string, init: RequestInit & { json?: unknown } = {}): Promise<T> {
   const { json, ...rest } = init;
   const normalizedPath = `/${path.replace(/^\/+/, '')}`;
-  const token = authTokenGetter ? await authTokenGetter() : null;
+  const token = path.startsWith('/admin') ? adminToken : authTokenGetter ? await authTokenGetter() : null;
   const res = await fetch(`${BASE}${normalizedPath}`, {
     credentials: 'include',
     ...rest,

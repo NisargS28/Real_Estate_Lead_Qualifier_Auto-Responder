@@ -31,6 +31,19 @@ const schema = z.object({
   N8N_ENABLED: bool.default(true),
   INTERNAL_API_SECRET: z.string().min(24),
   CLERK_SECRET_KEY: z.string().default(''),
+  RETELL_ENABLED: bool.default(false),
+  RETELL_API_KEY: z.string().default(''),
+  RETELL_AGENT_ID: z.string().default(''),
+  RETELL_PHONE_NUMBER: z.string().default(''),
+  // Retell signs with its webhook-badged API key; not an arbitrary shared secret.
+  RETELL_WEBHOOK_SECRET: z.string().default(''),
+  RETELL_TEST_NUMBERS: z.string().default(''),
+  VOICE_AUTO_CALL: bool.default(false),
+  VOICE_CALL_START_HOUR: z.coerce.number().int().min(0).max(23).default(9),
+  VOICE_CALL_END_HOUR: z.coerce.number().int().min(1).max(24).default(21),
+  N8N_VOICE_FOLLOWUP_URL: z.string().default(''),
+  N8N_VOICE_OUTBOUND_URL: z.string().default(''),
+  ADMIN_BEARER_AUTH: bool.default(false),
 
   SHEETS_WEBAPP_URL: z.string().default(''),
   SHEETS_WEBHOOK_TOKEN: z.string().default(''),
@@ -76,5 +89,9 @@ if (!parsed.success) {
   throw new Error(`Invalid backend environment configuration: ${missing}. See backend/.env.example`);
 }
 
+if (parsed.data.RETELL_ENABLED && (!parsed.data.RETELL_API_KEY || !parsed.data.RETELL_AGENT_ID || !/^\+[1-9]\d{7,14}$/.test(parsed.data.RETELL_PHONE_NUMBER))) {
+  throw new Error('RETELL_ENABLED requires RETELL_API_KEY, RETELL_AGENT_ID and an E.164 RETELL_PHONE_NUMBER');
+}
 export const config = parsed.data;
+if (config.VOICE_CALL_START_HOUR >= config.VOICE_CALL_END_HOUR) throw new Error('Voice calling hours must end after they start');
 export type Config = typeof config;

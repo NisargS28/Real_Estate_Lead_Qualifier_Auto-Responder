@@ -26,6 +26,7 @@
     "mongoose": "^8.9.5",
     "pino": "^9.6.0",
     "pino-http": "^10.4.0",
+    "retell-sdk": "^6.2.21",
     "zod": "^4.6.7"
   },
   "devDependencies": {

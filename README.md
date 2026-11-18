@@ -1,5 +1,12 @@
 # NESTR. — Real Estate Lead Qualifier & Auto-Responder
 
+Production preparation: [audit](docs/PRODUCTION_AUDIT.md),
+[Retell voice setup](docs/RETELL_INTEGRATION.md),
+[Render deployment](docs/RENDER_DEPLOYMENT.md),
+[environment reference](docs/PRODUCTION_ENVIRONMENT.md),
+[verification and limitations](docs/PRODUCTION_TESTING.md).
+Voice calling is disabled by default; deploy and verify the webhook before enabling it.
+
 Every property inquiry, from the website chatbot, the website form, a Google Form or WhatsApp, is
 classified by an LLM (buyer / renter / investor, urgency, budget, location, timeline, requirements) and
 answered instantly with a personalised reply and matching listings. It is stored in MongoDB, logged to

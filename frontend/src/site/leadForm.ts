@@ -13,6 +13,7 @@ export const leadFormSchema = z.object({
   budget: z.string().trim().max(60).optional().default(''),
   timeline: z.string().trim().max(60).optional().default(''),
   message: z.string().trim().max(1500).optional().default(''),
+  callConsent: z.boolean().optional().default(false),
 });
 export type LeadForm = z.infer<typeof leadFormSchema>;
 

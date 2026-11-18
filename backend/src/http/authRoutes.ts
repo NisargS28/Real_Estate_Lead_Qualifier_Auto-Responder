@@ -40,6 +40,7 @@ async function syncCustomer(req: Request) {
 
   const email = external.primaryEmailAddress?.emailAddress?.toLowerCase();
   if (!email) throw new Error('Clerk user has no primary email address');
+  if (external.primaryEmailAddress?.verification?.status !== 'verified') throw new Error('Verified primary email is required');
 
   let user = await User.findOne({ clerkId: external.id });
   if (!user) {
