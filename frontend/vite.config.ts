@@ -5,6 +5,9 @@ import { defineConfig } from 'vite';
 // so no backend URL or key is compiled into the bundle.
 export default defineConfig({
   plugins: [react()],
+  // Vercel Services route browser /api calls on the same domain. Runtime
+  // service bindings cannot be compiled into this static browser bundle.
+  ...(process.env.VERCEL === '1' ? { define: { 'import.meta.env.VITE_API_BASE_URL': JSON.stringify('/api') } } : {}),
   server: {
     port: 5173,
     strictPort: true,
